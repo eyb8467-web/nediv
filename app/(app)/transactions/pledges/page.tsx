@@ -13,8 +13,13 @@ export default async function PledgesPage() {
       .select("*, donors(first_name,last_name), campaigns(name)")
       .eq("org_id", org.id)
       .order("pledge_date", { ascending: false }),
-    supabase.from("donors").select("id,first_name,last_name").eq("org_id", org.id).order("first_name").limit(200),
-    supabase.from("campaigns").select("id,name").eq("org_id", org.id).order("name"),
+    supabase
+      .from("donors")
+      .select("id,first_name,last_name,first_name_hebrew,last_name_hebrew,phone")
+      .eq("org_id", org.id)
+      .order("first_name")
+      .limit(200),
+    supabase.from("campaigs").select("id,name").eq("org_id", org.id).order("name"),
     supabase.from("reasons").select("id,name").eq("org_id", org.id).order("name"),
   ]);
 
@@ -32,7 +37,7 @@ export default async function PledgesPage() {
         orgId={org.id}
         initialPledges={(pledges ?? []) as unknown as PledgeRow[]}
         donors={donors ?? []}
-        campaigns={campaigns ?? []}
+        campaigns={campaigs ?? []}
         reasons={reasons ?? []}
       />
     </div>
