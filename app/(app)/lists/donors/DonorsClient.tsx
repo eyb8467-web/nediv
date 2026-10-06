@@ -46,7 +46,7 @@ export function DonorsClient({
     const q = search.trim();
     let query = supabase.from("donors").select("*", { count: "exact" }).eq("org_id", orgId);
     if (q) {
-      const term = `%${q.replace(/[%,]/g, "")}%`;
+      const term = `%$${q.replace(/[%,]/g, "")}%`;
       query = query.or(
         `first_name.ilike.${term},last_name.ilike.${term},family_name.ilike.${term},acct_number.ilike.${term}`
       );
@@ -70,7 +70,7 @@ export function DonorsClient({
   }
 
   function handleUpdated(donor: Donor) {
-    setRows((prev) => prev.map((r) => (r.id === donor.id ? { ...r, ...donor } : r)));
+    setRows((prev) => prev.map((r) => (r.id === donor.id ? { ..r, ...donor } : r)));
     setEditingDonor((prev) => (prev && prev.id === donor.id ? { ...prev, ...donor } : prev));
   }
 
@@ -106,7 +106,7 @@ export function DonorsClient({
   return (
     <div>
       <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
-        <h2 className="text-sm font-semibold text-ink/60 uppercase tracking-wide">Donors ({count.toLocaleString()})</h2>
+        <h2 className="section-title">Donors <span className="text-ink/35">({count.toLocaleString()})</span></h2>
         <div className="flex items-center gap-3 flex-1 justify-end flex-wrap">
           <form onSubmit={handleSearchSubmit} className="relative w-full max-w-xs">
             <Icon name="search" className="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-ink/30" />
@@ -118,10 +118,16 @@ export function DonorsClient({
             />
           </form>
           <button className="btn-secondary" type="button" onClick={reload} disabled={searching}>
-            {searching ? "Searching…" : "Search"}
+            {searching ? (
+              <>
+                <span className="spinner" /> Searching…
+              </>
+            ) : (
+              "Search"
+            )}
           </button>
           <button className="btn-primary" type="button" onClick={() => setShowCreate(true)}>
-            <Icon name="plus" className="w-4 h-4" />+ New Donor
+            <Icon name="plus" className="w-4 h-4" /> New Donor
           </button>
         </div>
       </div>
