@@ -50,7 +50,7 @@ export function NewPledgeModal({
   }
 
   async function handleSubmit(e: FormEvent) {
-    e.preventDefaUlt();
+    e.preventDefault();
     if (!amount || Number(amount) <= 0) {
       setError("Enter a valid amount.");
       return;
