@@ -7,58 +7,118 @@ html, body {
 }
 
 body {
-  @apply bg-[#f6f8f7] text-ink antialiased;
+  @apply bg-[#f4f7f6] text-ink antialiased font-sans;
+}
+
+/* Slim, muted scrollbars so tables/sidebars feel considered rather than raw OS chrome. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(63 127 106 / 0.25) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(63 127 106 / 0.25);
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(63 127 106 / 0.4);
 }
 
 .card {
-  @apply bg-white rounded-xl border border-black/5 shadow-sm;
+  @apply bg-white rounded-xl border border-black/5 shadow-card transition-shadow;
+}
+
+.card-hoverable {
+  @apply hover:shadow-card-hover;
 }
 
 .btn {
-  @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none;
+  @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium transition-all duration-150 disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-1;
 }
 .btn-primary {
-  @apply btn bg-brand-600 text-white hover:bg-brand-700;
+  @apply btn bg-brand-600 text-white shadow-sm hover:bg-brand-700 hover:shadow active:bg-brand-800;
 }
 .btn-secondary {
-  @apply btn bg-white border border-black/10 text-ink hover:bg-black/5;
+  @apply btn bg-white border border-black/10 text-ink hover:bg-black/[0.04] hover:border-black/15 active:bg-black/[0.06];
 }
 .btn-ghost {
-  @apply btn text-ink/70 hover:bg-black/5;
+  @apply btn text-ink/60 hover:bg-black/5 hover:text-ink;
+}
+.btn-danger {
+  @apply btn bg-rose-600 text-white shadow-sm hover:bg-rose-700;
 }
 
 .input {
-  @apply w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-400 focus:border-brand-400;
+  @apply w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-ink outline-none transition-all duration-150 placeholder:text-ink/35 focus:ring-2 focus:ring-brand-400/40 focus:border-brand-400;
 }
 
 .label {
-  @apply block text-xs font-medium text-ink/60 mb-1;
+  @apply block text-xs font-medium text-ink/55 mb-1 tracking-wide;
+}
+
+.section-title {
+  @apply text-sm font-semibold text-ink/60 uppercase tracking-wide;
 }
 
 table.data-table {
   @apply w-full text-sm border-collapse;
 }
 table.data-table thead th {
-  @apply text-left font-medium text-ink/50 text-xs uppercase tracking-wide px-3 py-2 border-b border-black/10 sticky top-0 bg-white;
+  @apply text-left font-semibold text-ink/45 text-[11px] uppercase tracking-wider px-3.5 py-3 border-b border-black/10 sticky top-0 bg-white;
 }
 table.data-table tbody td {
-  @apply px-3 py-2 border-b border-black/5;
+  @apply px-3.5 py-2.5 border-b border-black/[0.06] text-[13.5px];
+}
+table.data-table tbody tr {
+  @apply transition-colors duration-100;
+}
+table.data-table tbody tr:nth-child(even) {
+  @apply bg-black/[0.015];
 }
 table.data-table tbody tr:hover {
-  @apply bg-brand-50/60;
+  @apply bg-brand-50/70;
+}
+table.data-table tbody tr:last-child td {
+  @apply border-b-0;
 }
 
 .tab-link {
-  @apply px-3 py-2 text-sm font-medium text-ink/60 border-b-2 border-transparent hover:text-ink;
+  @apply px-3 py-2 text-sm font-medipu text-ink/55 border-b-2 border-transparent transition-colors hover:text-ink hover:border-black/15;
 }
 .tab-link.active {
   @apply text-brand-700 border-brand-600;
 }
 
 .badge {
-  @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium;
+  @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
 }
 .badge-green { @apply badge bg-emerald-100 text-emerald-700; }
 .badge-amber { @apply badge bg-amber-100 text-amber-700; }
 .badge-red { @apply badge bg-rose-100 text-rose-700; }
-.badge-gray { @apply badge bg-gray-100 text-gray-700; }
+.badge-gray { @apply badge bg-gray-100 text-gray-600; }
+
+/* Empty / loading presentation helpers, used by DataTable and page sections. */
+.empty-state {
+  @apply flex flex-col items-center justify-center gap-2 py-12 text-center text-ink/40;
+}
+.empty-state-icon {
+  @apply flex items-center justify-center w-11 h-11 rounded-full bg-black/[0.04] text-ink/30 mb-1;
+}
+
+.spinner {
+  @apply inline-block w-4 h-4 rounded-full border-2 border-brand-200 border-t-brand-600 animate-spin;
+}
+
+.skeleton-line {
+  @apply h-3 rounded bg-black/[0.06] animate-pulse;
+}
+
+.modal-backdrop {
+  @apply fixed inset-0 z-50 flex items-center justify-center bg-ink/30 backdrop-blur-[2px] p-4 animate-fade-in;
+}
+.modal-panel {
+  @apply bg-white rounded-2xl shadow-2xl ring-1 ring-black/5 w-full max-h-[90vh] overflow-auto animate-modal-in;
+}
