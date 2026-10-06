@@ -7,14 +7,19 @@ export default async function SchedulesPage() {
   const { org } = await requireOrgContext();
   const supabase = supabaseServer();
 
-  const [{ data: schedules }, { data: donors }, { data: campaigns }] = await Promise.all([
+  const [{ data: schedules }, { data: donors }, { data: campaigs }] = await Promise.all([
     supabase
       .from("schedules")
       .select("*, donors(first_name,last_name)")
       .eq("org_id", org.id)
       .order("next_payment_date", { ascending: true }),
-    supabase.from("donors").select("id,first_name,last_name").eq("org_id", org.id).order("first_name").limit(200),
-    supabase.from("campaigns").select("id,name").eq("org_id", org.id).order("name"),
+    supabase
+      .from("donors")
+      .select("id,first_name,last_name,first_name_hebrew,last_name_hebrew,phone")
+      .eq("org_id", org.id)
+      .order("first_name")
+      .limit(200),
+    supabase.from("campaigs").select("id,name").eq("org_id", org.id).order("name"),
   ]);
 
   return (
@@ -31,7 +36,7 @@ export default async function SchedulesPage() {
         orgId={org.id}
         initialSchedules={(schedules ?? []) as unknown as ScheduleRow[]}
         donors={donors ?? []}
-        campaigns={campaigns ?? []}
+        campaigns={campaigs ?? []}
       />
     </div>
   );
