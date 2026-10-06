@@ -103,12 +103,13 @@ export function PaymentsClient({
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex flex-wrap gap-4">
-        <StatTile label="Total Amount" value={money(totalAmount)} sub={`${payments.length} payments`} />
-        <StatTile label="Success" value={String(byStatus["Success"] ?? 0)} />
-        <StatTile label="Pending" value={String(byStatus["Pending"] ?? 0)} />
+        <StatTile icon="banknote" label="Total Amount" value={money(totalAmount)} sub={`${payments.length} payments`} />
+        <StatTile icon="layout-dashboard" label="Success" value={String(byStatus["Success"] ?? 0)} />
+        <StatTile icon="wallet" label="Pending" value={String(byStatus["Pending"] ?? 0)} />
         <StatTile
+          icon="x"
           label="Failed / Canceled"
           value={String((byStatus["Failed"] ?? 0) + (byStatus["Canceled"] ?? 0))}
         />
@@ -134,7 +135,11 @@ export function PaymentsClient({
               onChange={(e) => handleToChange(e.target.value)}
             />
           </div>
-          {loading && <span className="text-xs text-ink/40 pb-2">Loading…</span>}
+          {loading && (
+            <span className="flex items-center gap-1.5 text-xs text-ink/40 pb-2">
+              <span className="spinner" /> Loading…
+            </span>
+          )}
         </div>
         <button className="btn-primary" onClick={() => setModalOpen(true)}>
           <Icon name="plus" className="w-4 h-4" /> New Payment
