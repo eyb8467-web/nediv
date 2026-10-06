@@ -18,11 +18,18 @@ export function Modal({
 }) {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-      <div className={`bg-white rounded-xl shadow-xl w-full ${wide ? "max-w-3xl" : "max-w-lg"} max-h-[90vh] overflow-auto`}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-black/10 sticky top-0 bg-white">
-          <h2 className="font-semibold text-ink">{title}</h2>
-          <button onClick={onClose} className="text-ink/40 hover:text-ink">
+    <div className="modal-backdrop" onClick={onClose}>
+      <div
+        className={`modal-panel ${wide ? "max-w-3xl" : "max-w-lg"}`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-black/10 sticky top-0 bg-white/95 backdrop-blur-sm rounded-t-2xl">
+          <h2 className="font-semibold text-ink text-[15px]">{title}</h2>
+          <button
+            onClick={onClose}
+            className="shrink-0 w-8 h-8 inline-flex items-center justify-center rounded-full text-ink/40 transition-colors hover:text-ink hover:bg-black/5"
+            aria-label="Close"
+          >
             <Icon name="x" className="w-5 h-5" />
           </button>
         </div>
