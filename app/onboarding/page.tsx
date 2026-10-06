@@ -24,20 +24,29 @@ export default function OnboardingPage() {
       return;
     }
 
-    const { data: org, error: orgError } = await supabase
-      .from("organizations")
-      .insert({ name, org_number: orgNumber || null, email: user.email })
-      .select()
-      .single();
+    // Generate the org id client-side. The "organizations" SELECT policy only
+    // allows members to read a row, and the owner's membership doesn't exist
+    // yet at the moment of this insert — so we must NOT ask PostgREST to
+    // return the inserted row (that would re-check the SELECT policy and fail
+    // with "new row violates row-level security policy"). Insert with a
+    // known id instead, and skip .select() entirely.
+    const orgId =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
-    if (orgError || !org) {
-      setError(orgError?.message ?? "Could not create organization.");
+    const { error: orgError } = await supabase
+      .from("organizations")
+      .insert({ id: orgId, name, org_number: orgNumber || null, email: user.email });
+
+    if (orgError) {
+      setError(orgError.message);
       setLoading(false);
       return;
     }
 
     const { error: memberError } = await supabase.from("memberships").insert({
-      org_id: org.id,
+      org_id: orgId,
       user_id: user.id,
       role: "owner",
       perms: {
@@ -49,7 +58,7 @@ export default function OnboardingPage() {
     });
 
     // seed default org_settings row
-    await supabase.from("org_settings").insert({ org_id: org.id });
+    await supabase.from("org_settings").insert({ org_id: orgId });
 
     setLoading(false);
     if (memberError) {
