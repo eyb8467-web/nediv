@@ -8,11 +8,21 @@ export type DonorOption = {
   id: string;
   first_name: string | null;
   last_name: string | null;
+  first_name_hebrew?: string | null;
+  last_name_hebrew?: string | null;
+  phone?: string | null;
 };
 
 export function donorLabel(d: DonorOption | null | undefined) {
   if (!d) return "—";
   return `${d.first_name ?? ""} ${d.last_name ?? ""}`.trim() || "(unnamed donor)";
+}
+
+function donorSearchText(d: DonorOption) {
+  return [d.first_name, d.last_name, d.first_name_hebrew, d.last_name_hebrew, d.phone]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
 }
 
 const QUICK_ADD_EMPTY = {
@@ -28,7 +38,7 @@ const QUICK_ADD_EMPTY = {
 
 /**
  * Simple searchable donor picker: a text filter over an already-fetched donor list
- * (first 200 donors, per CONVENTIONS) narrowed down to a <select>.
+ *  (first 200 donors, per CONVENTIONS) narrowed down to a <select>.
  *
  * Also offers two optional helpers, shown when `orgId` is supplied:
  *  - "Search Genvite" opens genvite.com in a new tab using the user's own
@@ -67,7 +77,7 @@ export function DonorPicker({
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return allDonors;
-    return allDonors.filter((d) => donorLabel(d).toLowerCase().includes(q));
+    return allDonors.filter((d) => donorSearchText(d).includes(q));
   }, [allDonors, query]);
 
   function setField(name: keyof typeof QUICK_ADD_EMPTY, v: string) {
@@ -117,7 +127,12 @@ export function DonorPicker({
       setAddError(error?.message ?? "Could not create donor.");
       return;
     }
-    const newDonor: DonorOption = { id: data.id, first_name: data.first_name, last_name: data.last_name };
+    const newDonor: DonorOption = {
+      id: data.id,
+      first_name: data.first_name,
+      last_name: data.last_name,
+      phone: data.phone,
+    };
     setAddedDonors((prev) => [newDonor, ...prev]);
     onChange(newDonor.id);
     onDonorCreated?.(newDonor);
@@ -127,12 +142,12 @@ export function DonorPicker({
   }
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-2">
       <div className="flex gap-2">
         <input
           type="text"
           className="input flex-1"
-          placeholder="Search donor by name…"
+          placeholder="Search donor by name, Yiddish name, or phone…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -159,7 +174,7 @@ export function DonorPicker({
       {genviteNotice && <p className="text-xs text-emerald-600">{genviteNotice}</p>}
 
       {showAddForm && orgId && (
-        <div className="border border-ink/10 rounded-lg p-3 bg-[#f6f8f7] space-y-2">
+        <div className="border border-black/[0.06] rounded-xl p-3.5 bg-brand-50/50 space-y-2.5 animate-fade-in">
           <p className="text-xs text-ink/50">
             Paste in details you found (e.g. on Genvite) to create a new donor and select them.
           </p>
