@@ -58,36 +58,60 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold text-ink mb-4">Dashboard</h1>
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold text-ink tracking-tight">Dashboard</h1>
+        <p className="text-sm text-ink/45 mt-0.5">Here's what's happening with {org.name} right now.</p>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <section>
-            <h2 className="text-sm font-semibold text-ink/60 uppercase tracking-wide mb-2">Total Recent — Last 30 Days</h2>
+            <h2 className="section-title mb-3">Total Recent — Last 30 Days</h2>
             <div className="flex flex-wrap gap-4">
-              <StatTile label="Payments" value={money(totalPaid)} sub={`${successPayments.length} transactions`} trend="up" />
-              <StatTile label="Pending payments" value={String(pendingCount)} />
-              <StatTile label="Canceled payments" value={String(canceledCount)} trend={canceledCount > 0 ? "down" : "flat"} />
-              <StatTile label="Pledges outstanding" value={money(pendingPledgeTotal)} sub={`${pendingPledges?.length ?? 0} open`} />
+              <StatTile
+                icon="banknote"
+                label="Payments"
+                value={money(totalPaid)}
+                sub={`${successPayments.length} transactions`}
+                trend="up"
+              />
+              <StatTile icon="wallet" label="Pending payments" value={String(pendingCount)} />
+              <StatTile
+                icon="x"
+                label="Canceled payments"
+                value={String(canceledCount)}
+                trend={canceledCount > 0 ? "down" : "flat"}
+              />
+              <StatTile
+                icon="bar-chart-2"
+                label="Pledges outstanding"
+                value={money(pendingPledgeTotal)}
+                sub={`${pendingPledges?.length ?? 0} open`}
+              />
             </div>
           </section>
 
-          <section className="card p-4">
-            <h2 className="text-sm font-semibold text-ink/60 uppercase tracking-wide mb-3">Recent Payments by Type</h2>
+          <section className="card p-5">
+            <h2 className="section-title mb-4">Recent Payments by Type</h2>
             {Object.keys(byType).length === 0 ? (
-              <p className="text-sm text-ink/40">No payments recorded in the last 30 days yet.</p>
+              <div className="empty-state py-6">
+                <p className="text-sm text-ink/40">No payments recorded in the last 30 days yet.</p>
+              </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-3.5">
                 {Object.entries(byType).map(([type, amt]) => {
                   const pct = totalPaid ? Math.round((amt / totalPaid) * 100) : 0;
                   return (
                     <div key={type}>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="text-ink/70">{type}</span>
+                      <div className="flex justify-between text-sm mb-1.5">
+                        <span className="text-ink/70 font-medium">{type}</span>
                         <span className="text-ink/50">{money(amt)}</span>
                       </div>
                       <div className="h-2 rounded-full bg-brand-50 overflow-hidden">
-                        <div className="h-full bg-brand-500" style={{ width: `${pct}%` }} />
+                        <div
+                          className="h-full bg-brand-500 rounded-full transition-all"
+                          style={{ width: `${pct}%` }}
+                        />
                       </div>
                     </div>
                   );
@@ -98,30 +122,38 @@ export default async function DashboardPage() {
         </div>
 
         <div className="space-y-6">
-          <section className="card p-4">
-            <h2 className="text-sm font-semibold text-ink/60 uppercase tracking-wide mb-3">Total Lists</h2>
-            <ul className="space-y-2">
+          <section className="card p-5">
+            <h2 className="section-title mb-3">Total Lists</h2>
+            <ul className="divide-y divide-black/[0.05]">
               {lists.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="flex justify-between items-center text-sm hover:text-brand-700">
+                  <Link
+                    href={l.href}
+                    className="flex justify-between items-center text-sm py-2.5 text-ink/75 hover:text-brand-700 transition-colors"
+                  >
                     <span>{l.label}</span>
-                    <span className="font-medium">{l.count.toLocaleString()}</span>
+                    <span className="font-semibold text-ink">{l.count.toLocaleString()}</span>
                   </Link>
                 </li>
               ))}
             </ul>
           </section>
 
-          <section className="card p-4">
-            <h2 className="text-sm font-semibold text-ink/60 uppercase tracking-wide mb-3">Reminders</h2>
+          <section className="card p-5">
+            <h2 className="section-title mb-3">Reminders</h2>
             {(!reminders || reminders.length === 0) ? (
-              <p className="text-sm text-ink/40">No reminders. <Link href="/notifications/reminders" className="text-brand-600">Add one →</Link></p>
+              <p className="text-sm text-ink/40">
+                No reminders.{" "}
+                <Link href="/notifications/reminders" className="text-brand-600 hover:text-brand-700 font-medium">
+                  Add one →
+                </Link>
+              </p>
             ) : (
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 {reminders.map((r) => (
-                  <li key={r.id} className="text-sm flex justify-between">
+                  <li key={r.id} className="text-sm flex justify-between gap-3">
                     <span className="text-ink/80">{r.title}</span>
-                    <span className="text-ink/40">{r.due_at ? new Date(r.due_at).toLocaleDateString() : ""}</span>
+                    <span className="text-ink/40 shrink-0">{r.due_at ? new Date(r.due_at).toLocaleDateString() : ""}</span>
                   </li>
                 ))}
               </ul>
