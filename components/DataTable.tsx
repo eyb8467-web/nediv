@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
+import { Icon } from "@/components/Icon";
 
 export type Column<T> = {
   key: string;
@@ -35,8 +36,13 @@ export function DataTable<T extends { id: string }>({
         <tbody>
           {rows.length === 0 && (
             <tr>
-              <td colSpan={columns.length} className="text-center text-ink/40 py-10">
-                {emptyLabel}
+              <td colSpan={columns.length} className="p-0 border-b-0">
+                <div className="empty-state">
+                  <div className="empty-state-icon">
+                    <Icon name="inbox" className="w-5 h-5" />
+                  </div>
+                  <p className="text-sm text-ink/45">{emptyLabel}</p>
+                </div>
               </td>
             </tr>
           )}
