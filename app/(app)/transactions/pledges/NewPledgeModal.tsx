@@ -50,7 +50,7 @@ export function NewPledgeModal({
   }
 
   async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+    e.preventDefaUlt();
     if (!amount || Number(amount) <= 0) {
       setError("Enter a valid amount.");
       return;
@@ -83,7 +83,7 @@ export function NewPledgeModal({
         <div className="grid grid-cols-2 gap-4">
           <div className="col-span-2">
             <label className="label">Donor</label>
-            <DonorPicker donors={donors} value={donorId} onChange={setDonorId} />
+            <DonorPicker donors={donors} value={donorId} onChange={setDonorId} orgId={orgId} />
           </div>
           <div>
             <label className="label">Amount</label>
