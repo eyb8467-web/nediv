@@ -86,7 +86,7 @@ table.data-table tbody tr:last-child td {
 }
 
 .tab-link {
-  @apply px-3 py-2 text-sm font-medipu text-ink/55 border-b-2 border-transparent transition-colors hover:text-ink hover:border-black/15;
+  @apply px-3 py-2 text-sm font-medium text-ink/55 border-b-2 border-transparent transition-colors hover:text-ink hover:border-black/15;
 }
 .tab-link.active {
   @apply text-brand-700 border-brand-600;
