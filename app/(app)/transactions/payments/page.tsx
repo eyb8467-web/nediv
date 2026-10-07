@@ -25,7 +25,7 @@ export default async function PaymentsPage() {
   ] = await Promise.all([
     supabase
       .from("payments")
-      .select("*, donors(first_name,last_name), campaigs(name)")
+      .select("*, donors(first_name,last_name), campaigns(name)")
       .eq("org_id", org.id)
       .gte("payment_date", from)
       .lte("payment_date", to)
