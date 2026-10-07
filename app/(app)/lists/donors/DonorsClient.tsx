@@ -46,7 +46,7 @@ export function DonorsClient({
     const q = search.trim();
     let query = supabase.from("donors").select("*", { count: "exact" }).eq("org_id", orgId);
     if (q) {
-      const term = `%$${q.replace(/[%,]/g, "")}%`;
+      const term = `%${q.replace(/[%,]/g, "")}%`;
       query = query.or(
         `first_name.ilike.${term},last_name.ilike.${term},family_name.ilike.${term},acct_number.ilike.${term}`
       );
@@ -70,7 +70,7 @@ export function DonorsClient({
   }
 
   function handleUpdated(donor: Donor) {
-    setRows((prev) => prev.map((r) => (r.id === donor.id ? { ..r, ...donor } : r)));
+    setRows((prev) => prev.map((r) => (r.id === donor.id ? { ...r, ...donor } : r)));
     setEditingDonor((prev) => (prev && prev.id === donor.id ? { ...prev, ...donor } : prev));
   }
 
