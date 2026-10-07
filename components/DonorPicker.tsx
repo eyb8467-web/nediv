@@ -38,7 +38,7 @@ const QUICK_ADD_EMPTY = {
 
 /**
  * Simple searchable donor picker: a text filter over an already-fetched donor list
- *  (first 200 donors, per CONVENTIONS) narrowed down to a <select>.
+ * (first 200 donors, per CONVENTIONS) narrowed down to a <select>.
  *
  * Also offers two optional helpers, shown when `orgId` is supplied:
  *  - "Search Genvite" opens genvite.com in a new tab using the user's own
