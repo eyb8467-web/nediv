@@ -19,7 +19,7 @@ export default async function PledgesPage() {
       .eq("org_id", org.id)
       .order("first_name")
       .limit(200),
-    supabase.from("campaigs").select("id,name").eq("org_id", org.id).order("name"),
+    supabase.from("campaigns").select("id,name").eq("org_id", org.id).order("name"),
     supabase.from("reasons").select("id,name").eq("org_id", org.id).order("name"),
   ]);
 
@@ -37,7 +37,7 @@ export default async function PledgesPage() {
         orgId={org.id}
         initialPledges={(pledges ?? []) as unknown as PledgeRow[]}
         donors={donors ?? []}
-        campaigns={campaigs ?? []}
+        campaigns={campaigns ?? []}
         reasons={reasons ?? []}
       />
     </div>
